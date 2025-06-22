@@ -1,0 +1,494 @@
+// Source code is decompiled from a .class file using FernFlower decompiler.
+package com.example.dao;
+
+import com.example.model.Attendance;
+import com.example.util.DatabaseConnection;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class AttendanceDAO {
+   public static final String INSERT_ATTENDANCE_SQL = "INSERT INTO attendances (user_id, work_date, check_in, check_out, shift, note) VALUES (?, ?, ?, ?, ?, ?)";
+   public static final String SELECT_ATTENDANCE_BY_ID = "SELECT * FROM attendances WHERE id = ?";
+   public static final String SELECT_ALL_ATTENDANCES = "SELECT * FROM attendances";
+   public static final String DELETE_ATTENDANCE_SQL = "DELETE FROM attendances WHERE id = ?";
+   public static final String UPDATE_ATTENDANCE_SQL = "UPDATE attendances SET user_id = ?, work_date = ?, check_in = ?, check_out = ?, shift = ?, note = ? WHERE id = ?";
+
+   public AttendanceDAO() {
+   }
+
+   public static List<Attendance> getAll() {
+      List<Attendance> list = new ArrayList();
+
+      try {
+         Throwable var1 = null;
+         Object var2 = null;
+
+         try {
+            Connection conn = DatabaseConnection.getConnection();
+
+            try {
+               PreparedStatement ps = conn.prepareStatement("SELECT * FROM attendances");
+               ResultSet rs = ps.executeQuery();
+
+               while(rs.next()) {
+                  Attendance a = new Attendance(rs);
+                  list.add(a);
+               }
+            } finally {
+               if (conn != null) {
+                  conn.close();
+               }
+
+            }
+         } catch (Throwable var14) {
+            if (var1 == null) {
+               var1 = var14;
+            } else if (var1 != var14) {
+               var1.addSuppressed(var14);
+            }
+
+            throw var1;
+         }
+      } catch (Exception var15) {
+         var15.printStackTrace();
+      }
+
+      return list;
+   }
+
+   public static boolean insert(Attendance a) {
+      try {
+         Throwable var1 = null;
+         Object var2 = null;
+
+         try {
+            Connection conn = DatabaseConnection.getConnection();
+
+            boolean var10000;
+            try {
+               PreparedStatement ps = conn.prepareStatement("INSERT INTO attendances (user_id, work_date, check_in, check_out, shift, note) VALUES (?, ?, ?, ?, ?, ?)");
+               ps.setInt(1, a.getUserId());
+               ps.setDate(2, new Date(a.getWorkDate().getTime()));
+               ps.setTime(3, a.getCheckIn());
+               ps.setTime(4, a.getCheckOut());
+               ps.setString(5, a.getShift());
+               ps.setString(6, a.getNote());
+               var10000 = ps.executeUpdate() > 0;
+            } finally {
+               if (conn != null) {
+                  conn.close();
+               }
+
+            }
+
+            return var10000;
+         } catch (Throwable var12) {
+            if (var1 == null) {
+               var1 = var12;
+            } else if (var1 != var12) {
+               var1.addSuppressed(var12);
+            }
+
+            throw var1;
+         }
+      } catch (Exception var13) {
+         var13.printStackTrace();
+         return false;
+      }
+   }
+
+   public static boolean update(Attendance a) {
+      try {
+         Throwable var1 = null;
+         Object var2 = null;
+
+         try {
+            Connection conn = DatabaseConnection.getConnection();
+
+            boolean var10000;
+            try {
+               String sql = "UPDATE attendances SET user_id=?, work_date=?, check_in=?, check_out=?, shift=?, note=? WHERE id=?";
+               PreparedStatement ps = conn.prepareStatement(sql);
+               ps.setInt(1, a.getUserId());
+               ps.setDate(2, new Date(a.getWorkDate().getTime()));
+               ps.setTime(3, a.getCheckIn());
+               ps.setTime(4, a.getCheckOut());
+               ps.setString(5, a.getShift());
+               ps.setString(6, a.getNote());
+               ps.setInt(7, a.getId());
+               var10000 = ps.executeUpdate() > 0;
+            } finally {
+               if (conn != null) {
+                  conn.close();
+               }
+
+            }
+
+            return var10000;
+         } catch (Throwable var13) {
+            if (var1 == null) {
+               var1 = var13;
+            } else if (var1 != var13) {
+               var1.addSuppressed(var13);
+            }
+
+            throw var1;
+         }
+      } catch (Exception var14) {
+         var14.printStackTrace();
+         return false;
+      }
+   }
+
+   public static boolean delete(int id) {
+      try {
+         Throwable var1 = null;
+         Object var2 = null;
+
+         try {
+            Connection conn = DatabaseConnection.getConnection();
+
+            boolean var10000;
+            try {
+               String sql = "DELETE FROM attendances WHERE id=?";
+               PreparedStatement ps = conn.prepareStatement(sql);
+               ps.setInt(1, id);
+               var10000 = ps.executeUpdate() > 0;
+            } finally {
+               if (conn != null) {
+                  conn.close();
+               }
+
+            }
+
+            return var10000;
+         } catch (Throwable var13) {
+            if (var1 == null) {
+               var1 = var13;
+            } else if (var1 != var13) {
+               var1.addSuppressed(var13);
+            }
+
+            throw var1;
+         }
+      } catch (Exception var14) {
+         var14.printStackTrace();
+         return false;
+      }
+   }
+
+   public static List<Attendance> getByWorkDate(Date workDate) {
+      List<Attendance> list = new ArrayList();
+      String sql = "SELECT * FROM attendances WHERE work_date = ?";
+
+      try {
+         Throwable var3 = null;
+         Object var4 = null;
+
+         try {
+            Connection conn = DatabaseConnection.getConnection();
+
+            try {
+               PreparedStatement ps = conn.prepareStatement(sql);
+               ps.setDate(1, workDate);
+               ResultSet rs = ps.executeQuery();
+
+               while(rs.next()) {
+                  Attendance a = new Attendance(rs);
+                  list.add(a);
+               }
+            } finally {
+               if (conn != null) {
+                  conn.close();
+               }
+
+            }
+         } catch (Throwable var16) {
+            if (var3 == null) {
+               var3 = var16;
+            } else if (var3 != var16) {
+               var3.addSuppressed(var16);
+            }
+
+            throw var3;
+         }
+      } catch (Exception var17) {
+         var17.printStackTrace();
+      }
+
+      return list;
+   }
+
+   public static List<Attendance> getByWorkWeek(int week) {
+      List<Attendance> list = new ArrayList();
+      String sql = "SELECT * FROM attendances WHERE WEEK(work_date) = ?";
+
+      try {
+         Throwable var3 = null;
+         Object var4 = null;
+
+         try {
+            Connection conn = DatabaseConnection.getConnection();
+
+            try {
+               PreparedStatement ps = conn.prepareStatement(sql);
+               ps.setInt(1, week);
+               ResultSet rs = ps.executeQuery();
+
+               while(rs.next()) {
+                  Attendance a = new Attendance(rs);
+                  list.add(a);
+               }
+            } finally {
+               if (conn != null) {
+                  conn.close();
+               }
+
+            }
+         } catch (Throwable var16) {
+            if (var3 == null) {
+               var3 = var16;
+            } else if (var3 != var16) {
+               var3.addSuppressed(var16);
+            }
+
+            throw var3;
+         }
+      } catch (Exception var17) {
+         var17.printStackTrace();
+      }
+
+      return list;
+   }
+
+   public static List<Attendance> getByWorkMonth(int month) {
+      List<Attendance> list = new ArrayList();
+      String sql = "SELECT * FROM attendances WHERE MONTH(work_date) = ?";
+
+      try {
+         Throwable var3 = null;
+         Object var4 = null;
+
+         try {
+            Connection conn = DatabaseConnection.getConnection();
+
+            try {
+               PreparedStatement ps = conn.prepareStatement(sql);
+               ps.setInt(1, month);
+               ResultSet rs = ps.executeQuery();
+
+               while(rs.next()) {
+                  Attendance a = new Attendance(rs);
+                  list.add(a);
+               }
+            } finally {
+               if (conn != null) {
+                  conn.close();
+               }
+
+            }
+         } catch (Throwable var16) {
+            if (var3 == null) {
+               var3 = var16;
+            } else if (var3 != var16) {
+               var3.addSuppressed(var16);
+            }
+
+            throw var3;
+         }
+      } catch (Exception var17) {
+         var17.printStackTrace();
+      }
+
+      return list;
+   }
+
+   public static List<Attendance> getByWorkYear(int year) {
+      List<Attendance> list = new ArrayList();
+      String sql = "SELECT * FROM attendances WHERE YEAR(work_date) = ?";
+
+      try {
+         Throwable var3 = null;
+         Object var4 = null;
+
+         try {
+            Connection conn = DatabaseConnection.getConnection();
+
+            try {
+               PreparedStatement ps = conn.prepareStatement(sql);
+               ps.setInt(1, year);
+               ResultSet rs = ps.executeQuery();
+
+               while(rs.next()) {
+                  Attendance a = new Attendance(rs);
+                  list.add(a);
+               }
+            } finally {
+               if (conn != null) {
+                  conn.close();
+               }
+
+            }
+         } catch (Throwable var16) {
+            if (var3 == null) {
+               var3 = var16;
+            } else if (var3 != var16) {
+               var3.addSuppressed(var16);
+            }
+
+            throw var3;
+         }
+      } catch (Exception var17) {
+         var17.printStackTrace();
+      }
+
+      return list;
+   }
+
+   public static List<Attendance> getByUserId(int userId) {
+      List<Attendance> list = new ArrayList();
+      String sql = "SELECT * FROM attendances WHERE user_id = ?";
+
+      try {
+         Throwable var3 = null;
+         Object var4 = null;
+
+         try {
+            Connection conn = DatabaseConnection.getConnection();
+
+            try {
+               PreparedStatement ps = conn.prepareStatement(sql);
+               ps.setInt(1, userId);
+               ResultSet rs = ps.executeQuery();
+
+               while(rs.next()) {
+                  Attendance a = new Attendance(rs);
+                  list.add(a);
+               }
+            } finally {
+               if (conn != null) {
+                  conn.close();
+               }
+
+            }
+         } catch (Throwable var16) {
+            if (var3 == null) {
+               var3 = var16;
+            } else if (var3 != var16) {
+               var3.addSuppressed(var16);
+            }
+
+            throw var3;
+         }
+      } catch (Exception var17) {
+         var17.printStackTrace();
+      }
+
+      return list;
+   }
+
+   public static void saveAttendance(Attendance attendance) {
+      String sql = "INSERT INTO attendances (user_id, work_date, check_in, check_out, shift, note) VALUES (?, ?, ?, ?, ?, ?)";
+
+      try {
+         Throwable var2 = null;
+         Object var3 = null;
+
+         try {
+            Connection conn = DatabaseConnection.getConnection();
+
+            try {
+               PreparedStatement stmt = conn.prepareStatement(sql);
+
+               try {
+                  stmt.setInt(1, attendance.getUserId());
+                  stmt.setDate(2, new Date(attendance.getWorkDate().getTime()));
+                  stmt.setTime(3, attendance.getCheckIn());
+                  stmt.setTime(4, attendance.getCheckOut());
+                  stmt.setString(5, attendance.getShift());
+                  stmt.setString(6, attendance.getNote());
+                  stmt.executeUpdate();
+               } finally {
+                  if (stmt != null) {
+                     stmt.close();
+                  }
+
+               }
+            } catch (Throwable var22) {
+               if (var2 == null) {
+                  var2 = var22;
+               } else if (var2 != var22) {
+                  var2.addSuppressed(var22);
+               }
+
+               if (conn != null) {
+                  conn.close();
+               }
+
+               throw var2;
+            }
+
+            if (conn != null) {
+               conn.close();
+            }
+         } catch (Throwable var23) {
+            if (var2 == null) {
+               var2 = var23;
+            } else if (var2 != var23) {
+               var2.addSuppressed(var23);
+            }
+
+            throw var2;
+         }
+      } catch (SQLException var24) {
+         var24.printStackTrace();
+      } catch (ClassNotFoundException var25) {
+         throw new RuntimeException(var25);
+      }
+
+   }
+
+   public static Attendance getById(int id) {
+      Attendance attendance = null;
+
+      try {
+         Throwable var2 = null;
+         Object var3 = null;
+
+         try {
+            Connection conn = DatabaseConnection.getConnection();
+
+            try {
+               PreparedStatement ps = conn.prepareStatement("SELECT * FROM attendances WHERE id = ?");
+               ps.setInt(1, id);
+               ResultSet rs = ps.executeQuery();
+               if (rs.next()) {
+                  attendance = new Attendance(rs);
+               }
+            } finally {
+               if (conn != null) {
+                  conn.close();
+               }
+
+            }
+         } catch (Throwable var14) {
+            if (var2 == null) {
+               var2 = var14;
+            } else if (var2 != var14) {
+               var2.addSuppressed(var14);
+            }
+
+            throw var2;
+         }
+      } catch (Exception var15) {
+         var15.printStackTrace();
+      }
+
+      return attendance;
+   }
+}
