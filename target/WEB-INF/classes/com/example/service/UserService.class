@@ -1,1 +1,21 @@
+// Source code is decompiled from a .class file using FernFlower decompiler.
+package com.example.service;
 
+import com.example.dao.UserDAO;
+import com.example.model.User;
+import java.sql.SQLException;
+
+public class UserService {
+   private UserDAO userDAO = new UserDAO();
+
+   public UserService() {
+   }
+
+   public void registerUser(User user) throws SQLException {
+      this.userDAO.registerUser(user);
+   }
+
+   public User validateUser(String username, String password) {
+      return this.userDAO.validateUser(username, password);
+   }
+}
